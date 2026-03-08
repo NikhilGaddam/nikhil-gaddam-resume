@@ -85,19 +85,24 @@
     ></iframe>
   </div>
 
-  <script>
-    // Track visit — fire and forget
-    fetch('/api/track', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        page: window.location.pathname,
-        ref: document.referrer,
-        screen: `${screen.width}x${screen.height}`,
-        lang: navigator.language,
-      }),
-    }).catch(() => {});
+  <!-- Default Statcounter code for Nikhil's Portfolio https://nikhilgaddam.com/ -->
+  <script type="text/javascript">
+    var sc_project=13209483;
+    var sc_invisible=1;
+    var sc_security="285db3ff";
+  </script>
+  <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
+  <noscript>
+    <div class="statcounter">
+      <a title="Web Analytics" href="https://statcounter.com/" target="_blank">
+        <img class="statcounter" src="https://c.statcounter.com/13209483/0/285db3ff/1/"
+             alt="Web Analytics" referrerPolicy="no-referrer-when-downgrade" />
+      </a>
+    </div>
+  </noscript>
+  <!-- End of Statcounter Code -->
 
+  <script>
     // PDF fallback for browsers that block iframe embeds
     document.getElementById('pdfFrame').onerror = function () {
       const v = document.getElementById('viewer');
