@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nikhil Gaddam — Resume</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: #0f0f1a;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 24px;
+      background: #0a0a14;
+      border-bottom: 1px solid #1e1e38;
+    }
+
+    header h1 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #a78bfa;
+      letter-spacing: 0.02em;
+    }
+
+    header a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 16px;
+      background: #7c3aed;
+      color: #fff;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 500;
+      transition: background 0.15s;
+    }
+    header a:hover { background: #6d28d9; }
+
+    .viewer {
+      width: 100%;
+      height: calc(100vh - 50px);
+    }
+
+    .viewer iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    .fallback {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 12px;
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+    .fallback a { color: #a78bfa; font-weight: 600; text-decoration: none; }
+    .fallback a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Nikhil Gaddam</h1>
+    <a href="nikhil_gaddam.pdf" download>&#8659;&nbsp; Download Resume</a>
+  </header>
+
+  <div class="viewer" id="viewer">
+    <iframe
+      src="nikhil_gaddam.pdf#toolbar=1&navpanes=0"
+      title="Nikhil Gaddam Resume"
+      id="pdfFrame"
+    ></iframe>
+  </div>
+
+  <script>
+    // Track visit — fire and forget
+    fetch('/api/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        page: window.location.pathname,
+        ref: document.referrer,
+        screen: `${screen.width}x${screen.height}`,
+        lang: navigator.language,
+      }),
+    }).catch(() => {});
+
+    // PDF fallback for browsers that block iframe embeds
+    document.getElementById('pdfFrame').onerror = function () {
+      const v = document.getElementById('viewer');
+      v.innerHTML =
+        '<div class="fallback" style="display:flex">' +
+        '<p>Your browser couldn\'t display the PDF inline.</p>' +
+        '<a href="nikhil_gaddam.pdf" download>Download Resume instead</a>' +
+        '</div>';
+    };
+  </script>
+
+</body>
+</html>

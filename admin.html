@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analytics — nikhilgaddam.com</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      min-height: 100vh;
+      background: #0f0f1a;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: #e0e0e0;
+      font-size: 14px;
+    }
+
+    /* ── Login ─────────────────────────────────── */
+    #login {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh;
+    }
+    .login-box {
+      background: #1a1a2e; border: 1px solid #2a2a4a;
+      border-radius: 12px; padding: 40px 36px; width: 300px;
+    }
+    .login-box h2 { font-size: 1.1rem; color: #a78bfa; margin-bottom: 20px; }
+    .login-box input {
+      width: 100%; padding: 10px 12px; margin-bottom: 12px;
+      background: #0f0f23; border: 1px solid #2a2a4a;
+      border-radius: 6px; color: #e0e0e0; font-size: 0.95rem; outline: none;
+    }
+    .login-box input:focus { border-color: #7c3aed; }
+    .login-box button {
+      width: 100%; padding: 10px;
+      background: #7c3aed; color: #fff;
+      border: none; border-radius: 6px;
+      font-size: 0.9rem; font-weight: 600; cursor: pointer;
+    }
+    .login-box button:hover { background: #6d28d9; }
+    .err { color: #f87171; font-size: 0.82rem; margin-top: 8px; }
+
+    /* ── Dashboard ──────────────────────────────── */
+    #dashboard { display: none; }
+
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 13px 24px; background: #0a0a14;
+      border-bottom: 1px solid #1e1e38;
+    }
+    .topbar h1 { font-size: 0.95rem; color: #a78bfa; font-weight: 600; }
+    .topbar-links { display: flex; gap: 10px; }
+    .topbar-links a {
+      display: inline-block; padding: 5px 12px;
+      border: 1px solid #2a2a4a; border-radius: 5px;
+      color: #94a3b8; text-decoration: none; font-size: 0.8rem;
+    }
+    .topbar-links a:hover { border-color: #a78bfa; color: #a78bfa; }
+
+    .content { padding: 24px; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px; margin-bottom: 28px;
+    }
+    .stat {
+      background: #1a1a2e; border: 1px solid #2a2a4a;
+      border-radius: 10px; padding: 18px 22px;
+    }
+    .stat .lbl { font-size: 0.72rem; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; }
+    .stat .val { font-size: 1.9rem; font-weight: 700; color: #a78bfa; margin-top: 4px; }
+
+    /* ── Bar chart ──────────────────────────────── */
+    .card {
+      background: #1a1a2e; border: 1px solid #2a2a4a;
+      border-radius: 10px; padding: 18px 22px; margin-bottom: 24px;
+    }
+    .card-title { font-size: 0.72rem; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+    #chart { display: flex; align-items: flex-end; gap: 3px; height: 72px; }
+    .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+    .bar { background: #7c3aed; border-radius: 2px 2px 0 0; width: 100%; min-height: 2px; }
+    .bar:hover { background: #a78bfa; }
+    .bar-lbl { font-size: 0.55rem; color: #334155; transform: rotate(-40deg); white-space: nowrap; }
+
+    /* ── Table ──────────────────────────────────── */
+    .tbl-wrap { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 10px; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 700px; }
+    thead th {
+      background: #0f0f23; padding: 10px 14px;
+      text-align: left; font-size: 0.72rem; color: #475569;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      border-bottom: 1px solid #1e1e38;
+    }
+    tbody tr { border-bottom: 1px solid #1a1a2e; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #1e1e38; }
+    td { padding: 9px 14px; vertical-align: middle; }
+    td.ip { font-family: 'SF Mono', monospace; color: #38bdf8; font-size: 0.85rem; }
+    td.muted { color: #475569; white-space: nowrap; }
+    td.trunc { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #94a3b8; }
+    .badge {
+      display: inline-block; padding: 2px 7px; border-radius: 99px;
+      font-size: 0.68rem; font-weight: 600;
+    }
+    .new { background: #14532d; color: #86efac; }
+    .ret { background: #1e3a5f; color: #93c5fd; }
+    .flag { font-size: 1rem; }
+  </style>
+</head>
+<body>
+
+<!-- Login screen -->
+<div id="login">
+  <div class="login-box">
+    <h2>Analytics</h2>
+    <input type="password" id="tokenInput" placeholder="Admin token" />
+    <button onclick="doLogin()">Sign in</button>
+    <p class="err" id="loginErr"></p>
+  </div>
+</div>
+
+<!-- Dashboard -->
+<div id="dashboard">
+  <div class="topbar">
+    <h1>nikhilgaddam.com — Analytics</h1>
+    <div class="topbar-links">
+      <a href="#" onclick="exportCSV()">Export CSV</a>
+      <a href="/">View Site</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="stats">
+      <div class="stat"><div class="lbl">Total Visits</div><div class="val" id="statTotal">—</div></div>
+      <div class="stat"><div class="lbl">Unique IPs</div><div class="val" id="statUnique">—</div></div>
+      <div class="stat"><div class="lbl">Today</div><div class="val" id="statToday">—</div></div>
+      <div class="stat"><div class="lbl">This Month</div><div class="val" id="statMonth">—</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Visits — Last 30 Days</div>
+      <div id="chart"></div>
+    </div>
+
+    <div class="card-title" style="margin-bottom:10px" id="tblLabel"></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Time</th>
+            <th>IP Address</th>
+            <th>Country</th>
+            <th>Type</th>
+            <th>Referrer</th>
+            <th>User Agent</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+let adminToken = '';
+let allVisits  = [];
+
+function logout() {
+  adminToken = '';
+  sessionStorage.removeItem('admin_token');
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('login').style.display     = 'flex';
+}
+
+async function doLogin() {
+  const t = document.getElementById('tokenInput').value.trim();
+  if (!t) return;
+  const ok = await loadData(t);
+  if (ok) {
+    adminToken = t;
+    sessionStorage.setItem('admin_token', t);
+    document.getElementById('login').style.display     = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+  } else {
+    document.getElementById('loginErr').textContent = 'Incorrect token or server error.';
+  }
+}
+
+async function loadData(token) {
+  try {
+    const res = await fetch('/api/admin?token=' + encodeURIComponent(token));
+    if (!res.ok) return false;
+    const data = await res.json();
+    render(data);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function render({ stats, visits }) {
+  allVisits = visits;
+
+  // Stats
+  const today = new Date().toISOString().slice(0, 10);
+  const month  = new Date().toISOString().slice(0, 7);
+  const todayCt = visits.filter(v => v.time.startsWith(today)).length;
+  const monthCt = visits.filter(v => v.time.startsWith(month)).length;
+
+  document.getElementById('statTotal').textContent  = fmt(stats.total);
+  document.getElementById('statUnique').textContent = fmt(stats.unique_ips);
+  document.getElementById('statToday').textContent  = fmt(todayCt);
+  document.getElementById('statMonth').textContent  = fmt(monthCt);
+
+  // Bar chart
+  const daily = {};
+  visits.forEach(v => {
+    const d = v.time.slice(0, 10);
+    daily[d] = (daily[d] || 0) + 1;
+  });
+  const days = Object.keys(daily).sort().slice(-30);
+  const max  = Math.max(...days.map(d => daily[d]), 1);
+  const chart = document.getElementById('chart');
+  chart.innerHTML = days.map(d =>
+    `<div class="bar-col">
+       <div class="bar" style="height:${Math.round((daily[d]/max)*64)}px" title="${d}: ${daily[d]}"></div>
+       <div class="bar-lbl">${d.slice(5)}</div>
+     </div>`
+  ).join('');
+
+  // Table
+  document.getElementById('tblLabel').textContent =
+    `Recent Visits (showing ${Math.min(visits.length, 500)} of ${fmt(stats.total)})`;
+
+  const seenIPs = new Set();
+  const rows = visits.slice(0, 500).map((v, i) => {
+    const isNew = !seenIPs.has(v.ip);
+    seenIPs.add(v.ip);
+    const dt = new Date(v.time).toLocaleString();
+    const flag = countryFlag(v.country);
+    return `<tr>
+      <td class="muted">${stats.total - i}</td>
+      <td class="muted">${dt}</td>
+      <td class="ip">${esc(v.ip)}</td>
+      <td>${flag} <span style="color:#94a3b8;font-size:.8rem">${esc(v.country||'')}</span></td>
+      <td><span class="badge ${isNew?'new':'ret'}">${isNew?'new':'return'}</span></td>
+      <td class="trunc" title="${esc(v.ref)}">${v.ref || '<span style="color:#334155">direct</span>'}</td>
+      <td class="trunc" title="${esc(v.ua)}">${esc(v.ua)}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('tbody').innerHTML = rows;
+}
+
+function exportCSV() {
+  if (!allVisits.length) return;
+  const header = 'time,ip,country,referrer,screen,lang,ua\n';
+  const rows = allVisits.map(v =>
+    [v.time, v.ip, v.country, v.ref, v.screen, v.lang, v.ua]
+      .map(x => `"${(x||'').replace(/"/g,'""')}"`)
+      .join(',')
+  ).join('\n');
+  const blob = new Blob([header + rows], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `visits_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+function fmt(n) { return Number(n).toLocaleString(); }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function countryFlag(code) {
+  if (!code || code.length !== 2) return '';
+  return String.fromCodePoint(...[...code.toUpperCase()].map(c => 0x1F1E6 - 65 + c.charCodeAt(0)));
+}
+
+// Auto-login if token saved in session
+const saved = sessionStorage.getItem('admin_token');
+if (saved) {
+  document.getElementById('tokenInput').value = saved;
+  doLogin();
+}
+
+document.getElementById('tokenInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+</script>
+
+</body>
+</html>

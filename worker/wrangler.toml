@@ -1,0 +1,21 @@
+name       = "nikhilgaddam-analytics"
+main       = "src/index.js"
+compatibility_date = "2024-01-01"
+
+# Route: forward /api/* on your domain to this Worker
+# (Cloudflare must be proxying the domain — orange cloud in DNS settings)
+routes = [
+  { pattern = "nikhilgaddam.com/api/*", zone_name = "nikhilgaddam.com" }
+]
+
+# D1 database binding
+[[d1_databases]]
+binding      = "DB"
+database_name = "resume-analytics"
+database_id  = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+
+# Environment variables
+# Set ADMIN_TOKEN as a secret (never commit the real value):
+#   wrangler secret put ADMIN_TOKEN
+[vars]
+# ADMIN_TOKEN is a secret — set via: wrangler secret put ADMIN_TOKEN
