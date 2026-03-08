@@ -1,118 +1,780 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nikhil Gaddam — Resume</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nikhil Gaddam</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Outfit:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #09090b;
+    --surface: #0f0f12;
+    --surface-2: #16161a;
+    --surface-3: #1c1c22;
+    --border: #27272a;
+    --border-active: #3f3f46;
+    --text: #fafafa;
+    --text-2: #a1a1aa;
+    --text-3: #71717a;
+    --text-4: #52525b;
+    --green: #22c55e;
+    --green-dim: rgba(34,197,94,0.08);
+    --green-glow: rgba(34,197,94,0.15);
+    --blue: #3b82f6;
+    --blue-dim: rgba(59,130,246,0.08);
+    --amber: #f59e0b;
+    --amber-dim: rgba(245,158,11,0.08);
+    --cyan: #06b6d4;
+    --cyan-dim: rgba(6,182,212,0.06);
+    --mono: 'JetBrains Mono', 'Space Mono', monospace;
+    --sans: 'Outfit', system-ui, sans-serif;
+  }
 
-    html, body {
-      height: 100%;
-      background: #f4f4f4;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
 
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 24px;
-      background: #fff;
-      border-bottom: 1px solid #e5e5e5;
-    }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
 
-    header h1 {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: #111;
-      letter-spacing: 0.01em;
-    }
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+    z-index: 9999;
+  }
 
-    header a {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
-      background: #111;
-      color: #fff;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 0.8rem;
-      font-weight: 500;
-      transition: background 0.15s;
-    }
-    header a:hover { background: #333; }
+  ::selection { background: var(--green); color: var(--bg); }
 
-    .viewer {
-      width: 100%;
-      height: calc(100vh - 50px);
-    }
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 44px;
+    background: rgba(9,9,11,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    z-index: 1000;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
 
-    .viewer iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
-    }
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-3);
+  }
 
-    .fallback {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      gap: 12px;
-      color: #888;
-      font-size: 0.95rem;
-    }
-    .fallback a { color: #111; font-weight: 600; text-decoration: none; }
-    .fallback a:hover { text-decoration: underline; }
-  </style>
+  .topbar-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green-glow);
+    animation: pulse-dot 3s ease infinite;
+  }
+  @keyframes pulse-dot { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+
+  .topbar-status { color: var(--green); font-weight: 500; }
+
+  .topbar-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: var(--text-4);
+  }
+  .topbar-right a {
+    color: var(--text-4);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .topbar-right a:hover { color: var(--text-2); }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 60px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.15;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 70%);
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: 15%; right: -10%;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(34,197,94,0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-content { position: relative; z-index: 1; max-width: 900px; }
+
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--green);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    animation: slide-in 0.6s ease forwards 0.1s;
+  }
+  .hero-tag::before { content: '>'; color: var(--text-4); }
+
+  .hero-name {
+    font-family: var(--sans);
+    font-size: clamp(52px, 7vw, 96px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -3px;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: slide-in 0.6s ease forwards 0.2s;
+    background: linear-gradient(135deg, var(--text) 40%, var(--text-3) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-desc {
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--text-3);
+    max-width: 600px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: slide-in 0.6s ease forwards 0.35s;
+  }
+
+  @keyframes slide-in {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 60px 120px;
+  }
+
+  .section {
+    margin-bottom: 80px;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .section.visible { opacity: 1; transform: translateY(0); }
+
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .section-icon.green { background: var(--green-dim); color: var(--green); }
+  .section-icon.blue  { background: var(--blue-dim);  color: var(--blue);  }
+  .section-icon.amber { background: var(--amber-dim); color: var(--amber); }
+  .section-icon.cyan  { background: var(--cyan-dim);  color: var(--cyan);  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-2);
+    letter-spacing: 0.5px;
+  }
+
+  /* Experience */
+  .exp {
+    position: relative;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    overflow: hidden;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .exp:hover {
+    border-color: var(--border-active);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.4);
+  }
+
+  .exp-top {
+    padding: 24px 28px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .exp-role { font-size: 17px; font-weight: 600; color: var(--text); }
+
+  .exp-date {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-4);
+    background: var(--surface-2);
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  .exp-org {
+    padding: 4px 28px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .exp-company { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--green); }
+
+  .exp-loc { font-family: var(--mono); font-size: 11px; color: var(--text-4); }
+  .exp-loc::before { content: '\00b7'; margin-right: 8px; color: var(--text-4); }
+
+  .exp-body { padding: 16px 28px 24px; }
+
+  .exp-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .exp-bullets li {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text-2);
+    line-height: 1.7;
+    padding-left: 22px;
+    position: relative;
+  }
+  .exp-bullets li::before {
+    content: '›';
+    position: absolute;
+    left: 0; top: 0;
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--text-4);
+  }
+
+  .hl {
+    color: var(--text);
+    font-weight: 500;
+    background: var(--green-dim);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+
+  /* Education */
+  .edu-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .edu {
+    padding: 24px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    transition: border-color 0.3s;
+  }
+  .edu:hover { border-color: var(--border-active); }
+
+  .edu-degree { font-size: 17px; font-weight: 600; color: var(--text); }
+  .edu-school { font-size: 13px; font-weight: 300; color: var(--text-2); margin-top: 4px; }
+  .edu-date   { font-family: var(--mono); font-size: 11px; color: var(--text-4); margin-top: 10px; }
+
+  /* Projects */
+  .proj {
+    padding: 24px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    margin-bottom: 14px;
+    transition: border-color 0.3s;
+  }
+  .proj:hover { border-color: var(--border-active); }
+
+  .proj-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .proj-name-wrap { display: flex; align-items: center; gap: 10px; }
+  .proj-name { font-size: 16px; font-weight: 600; color: var(--text); }
+
+  .proj-gh {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-3);
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .proj-gh:hover { border-color: var(--green); color: var(--green); background: var(--green-dim); }
+  .proj-gh svg { width: 16px; height: 16px; fill: currentColor; }
+
+  .proj-tags { display: flex; gap: 6px; }
+  .proj-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--cyan);
+    padding: 3px 8px;
+    border: 1px solid rgba(6,182,212,0.2);
+    border-radius: 4px;
+    background: var(--cyan-dim);
+  }
+
+  .proj-desc { font-size: 14px; font-weight: 300; color: var(--text-2); line-height: 1.7; }
+
+  /* Research */
+  .research {
+    padding: 24px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+  }
+  .research-title { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: 8px; }
+  .research-meta  { font-family: var(--mono); font-size: 11px; color: var(--text-4); display: flex; gap: 16px; flex-wrap: wrap; }
+
+  /* Skills */
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+
+  .skill-group {
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+  }
+  .skill-group-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-4);
+    margin-bottom: 12px;
+  }
+  .skill-items { display: flex; flex-wrap: wrap; gap: 6px; }
+  .skill-item {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-2);
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: var(--surface-3);
+    border: 1px solid transparent;
+    transition: all 0.2s;
+  }
+  .skill-item:hover { border-color: var(--green); color: var(--green); background: var(--green-dim); }
+
+  /* Footer terminal */
+  .footer {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 60px 60px;
+  }
+  .terminal {
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 20px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text-4);
+    line-height: 2;
+  }
+  .terminal .prompt { color: var(--green); }
+  .terminal .cmd    { color: var(--text-2); }
+  .terminal .out    { color: var(--text-4); }
+  .terminal .cursor {
+    display: inline-block;
+    width: 8px; height: 14px;
+    background: var(--green);
+    vertical-align: middle;
+    margin-left: 4px;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
+
+  /* Buttons */
+  .blog-link {
+    color: var(--green) !important;
+    border: 1px solid rgba(34,197,94,0.25);
+    padding: 4px 12px;
+    border-radius: 4px;
+    transition: all 0.25s !important;
+  }
+  .blog-link:hover { background: var(--green-dim); border-color: var(--green) !important; }
+
+  .dl-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--bg);
+    background: var(--green);
+    padding: 6px 16px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.25s;
+    box-shadow: 0 0 12px var(--green-glow);
+  }
+  .dl-btn:hover {
+    background: #16a34a;
+    box-shadow: 0 0 20px rgba(34,197,94,0.25);
+    transform: translateY(-1px);
+  }
+  .dl-btn svg {
+    width: 14px; height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* GitHub icon SVG (shared) */
+  .gh-icon { width: 16px; height: 16px; fill: currentColor; }
+
+  @media (max-width: 700px) {
+    .hero   { padding: 100px 24px 60px; }
+    .main   { padding: 0 24px 80px; }
+    .footer { padding: 0 24px 40px; }
+    .edu-row { grid-template-columns: 1fr; }
+    .skills-grid { grid-template-columns: 1fr 1fr; }
+    .topbar-right { display: none; }
+    .hero-name { letter-spacing: -2px; }
+  }
+</style>
 </head>
 <body>
 
-  <header>
-    <h1>Nikhil Gaddam</h1>
-    <a href="nikhil_gaddam.pdf" download>&#8659;&nbsp; Download Resume</a>
-  </header>
-
-  <div class="viewer" id="viewer">
-    <iframe
-      src="nikhil_gaddam.pdf#toolbar=1&navpanes=0"
-      title="Nikhil Gaddam Resume"
-      id="pdfFrame"
-    ></iframe>
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-dot"></div>
+    <span class="topbar-status">systems operational</span>
+    <span style="color:var(--text-4)">|</span>
+    <span>nikhil_gaddam</span>
   </div>
+  <div class="topbar-right">
+    <a href="#experience">exp</a>
+    <a href="#education">edu</a>
+    <a href="#projects">proj</a>
+    <a href="#skills">skills</a>
+    <span style="color:var(--text-4);font-size:12px;">ngaddam.dev@gmail.com</span>
+    <a href="nikhil_gaddam.pdf" download class="dl-btn">
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Resume
+    </a>
+  </div>
+</div>
 
-  <!-- Default Statcounter code for Nikhil's Portfolio https://nikhilgaddam.com/ -->
-  <script type="text/javascript">
-    var sc_project=13209483;
-    var sc_invisible=1;
-    var sc_security="285db3ff";
-  </script>
-  <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
-  <noscript>
-    <div class="statcounter">
-      <a title="Web Analytics" href="https://statcounter.com/" target="_blank">
-        <img class="statcounter" src="https://c.statcounter.com/13209483/0/285db3ff/1/"
-             alt="Web Analytics" referrerPolicy="no-referrer-when-downgrade" />
-      </a>
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-tag">Senior Software Engineer</div>
+    <h1 class="hero-name">Nikhil Gaddam</h1>
+    <p class="hero-desc">Building distributed systems that scale. Multi-cloud orchestration, Kubernetes-native platforms, and the automation that keeps production running.</p>
+  </div>
+</section>
+
+<main class="main">
+
+  <section class="section" id="experience">
+    <div class="section-head">
+      <div class="section-icon green">~</div>
+      <span class="section-label">Experience</span>
     </div>
-  </noscript>
-  <!-- End of Statcounter Code -->
 
-  <script>
-    // PDF fallback for browsers that block iframe embeds
-    document.getElementById('pdfFrame').onerror = function () {
-      const v = document.getElementById('viewer');
-      v.innerHTML =
-        '<div class="fallback" style="display:flex">' +
-        '<p>Your browser couldn\'t display the PDF inline.</p>' +
-        '<a href="nikhil_gaddam.pdf" download>Download Resume instead</a>' +
-        '</div>';
-    };
-  </script>
+    <div class="exp">
+      <div class="exp-top">
+        <span class="exp-role">Software Engineer II</span>
+        <span class="exp-date">Jan 2025 – Present</span>
+      </div>
+      <div class="exp-org">
+        <span class="exp-company">Strategy</span>
+        <span class="exp-loc">Tysons Corner, VA</span>
+      </div>
+      <div class="exp-body">
+        <ul class="exp-bullets">
+          <li>Designed a distributed multi-cloud orchestration platform across AWS, GCP, and Azure to provision and manage <span class="hl">1000+ clusters</span> with zero-downtime upgrades via Istio service mesh</li>
+          <li>Built an instance-to-Kubernetes migration engine using composite Halyard workflows with auto-computed cluster sizing, cutting migration time from <span class="hl">6 hrs to 2 hrs</span></li>
+          <li>Reduced cloud spend by <span class="hl">$3M annually</span> through adaptive autoscaling with Prometheus + KEDA, improving cost efficiency by 25%</li>
+          <li>Developed an AIOps Bot that ingests container logs and Prometheus metrics for automated anomaly detection, proactive alerting, and orphan resource audits</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp">
+      <div class="exp-top">
+        <span class="exp-role">Software Engineer Intern</span>
+        <span class="exp-date">May 2024 – Aug 2024</span>
+      </div>
+      <div class="exp-org">
+        <span class="exp-company">Strategy</span>
+        <span class="exp-loc">Tysons Corner, VA</span>
+      </div>
+      <div class="exp-body">
+        <ul class="exp-bullets">
+          <li>Built a high-throughput search auto-completion engine with RAG + LangChain, cutting end-to-end query latency by <span class="hl">60%</span> across 10K+ daily users</li>
+          <li>Designed a predictive SQL-caching layer that analyzes historical workloads, reducing search engine load by <span class="hl">50%</span> under peak traffic</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp">
+      <div class="exp-top">
+        <span class="exp-role">Lead Software Engineer</span>
+        <span class="exp-date">Jul 2021 – Aug 2023</span>
+      </div>
+      <div class="exp-org">
+        <span class="exp-company">Sprinklr</span>
+        <span class="exp-loc">Delhi, India</span>
+      </div>
+      <div class="exp-body">
+        <ul class="exp-bullets">
+          <li>Developed core backend components for Sprinklr's Conversational AI platform, leveraging LLMs and unsupervised learning for automated intent discovery and NLU</li>
+          <li>Optimized the no-code automation platform, cutting <span class="hl">first-response times by 33%</span> for Uber and Microsoft across high-volume customer operations</li>
+          <li>Shipped 4 REST API interfaces for Guided Workflows, adopted by 15+ teams across the organization</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="education">
+    <div class="section-head">
+      <div class="section-icon blue">^</div>
+      <span class="section-label">Education</span>
+    </div>
+    <div class="edu-row">
+      <div class="edu">
+        <div class="edu-degree">MS, Computer Science</div>
+        <div class="edu-school">Virginia Tech</div>
+        <div class="edu-date">Aug 2023 – Dec 2024</div>
+      </div>
+      <div class="edu">
+        <div class="edu-degree">B.Tech</div>
+        <div class="edu-school">IIT Guwahati</div>
+        <div class="edu-date">Jul 2017 – Jul 2021</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="projects">
+    <div class="section-head">
+      <div class="section-icon amber">#</div>
+      <span class="section-label">Open Source</span>
+    </div>
+
+    <div class="proj">
+      <div class="proj-head">
+        <div class="proj-name-wrap">
+          <span class="proj-name">OpenClaw</span>
+          <a href="https://github.com/openclaw" target="_blank" rel="noopener" class="proj-gh" title="GitHub">
+            <svg class="gh-icon" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          </a>
+        </div>
+        <div class="proj-tags"><span class="proj-tag">Python</span></div>
+      </div>
+      <div class="proj-desc">Core contributor to OpenClaw, a self-hosted personal AI assistant with browser automation capabilities. Building agentic workflows for task automation and intelligent web interaction.</div>
+    </div>
+
+    <div class="proj">
+      <div class="proj-head">
+        <div class="proj-name-wrap">
+          <span class="proj-name">Agent Gateway</span>
+          <a href="https://github.com/agentgateway/agentgateway" target="_blank" rel="noopener" class="proj-gh" title="GitHub">
+            <svg class="gh-icon" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          </a>
+        </div>
+        <div class="proj-tags"><span class="proj-tag">Rust</span></div>
+      </div>
+      <div class="proj-desc">Contributor to Agent Gateway, an open-source gateway for AI agents providing protocol translation between A2A and MCP, with built-in observability and security controls.</div>
+    </div>
+
+    <div class="proj">
+      <div class="proj-head">
+        <div class="proj-name-wrap">
+          <span class="proj-name">Archon</span>
+          <a href="https://github.com/NikhilGaddam" target="_blank" rel="noopener" class="proj-gh" title="GitHub">
+            <svg class="gh-icon" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          </a>
+        </div>
+        <div class="proj-tags"><span class="proj-tag">Python</span></div>
+      </div>
+      <div class="proj-desc">Contributor to Archon, a modular agentic OS for building autonomous multi-agents. Refactored the tool-execution pipeline to prevent partial-execution hangs via async subprocess timeouts, error-bounded retries, and cancellation signals.</div>
+    </div>
+
+    <div class="proj">
+      <div class="proj-head">
+        <div class="proj-name-wrap">
+          <span class="proj-name">Agent Browser</span>
+          <a href="https://github.com/NikhilGaddam" target="_blank" rel="noopener" class="proj-gh" title="GitHub">
+            <svg class="gh-icon" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          </a>
+        </div>
+        <div class="proj-tags"><span class="proj-tag">TypeScript</span><span class="proj-tag">Python</span></div>
+      </div>
+      <div class="proj-desc">Contributed to an open-source headless browser automation CLI for AI agents, built for LLM-optimized navigation.</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div class="section-icon blue">&amp;</div>
+      <span class="section-label">Research</span>
+    </div>
+    <div class="research">
+      <div class="research-title">Identifying Parking Demand Hotspots and Analyzing Rate Surges in Seattle</div>
+      <div class="research-meta">
+        <span>Oral Presentation</span>
+        <span>Urban Transitions 2024</span>
+        <span>Sitges, Spain</span>
+        <span>Nov 2024</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="skills">
+    <div class="section-head">
+      <div class="section-icon cyan">*</div>
+      <span class="section-label">Stack</span>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <div class="skill-group-label">Orchestration</div>
+        <div class="skill-items">
+          <span class="skill-item">Kubernetes</span>
+          <span class="skill-item">Helm</span>
+          <span class="skill-item">KEDA</span>
+          <span class="skill-item">Istio</span>
+          <span class="skill-item">Docker</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-label">Cloud</div>
+        <div class="skill-items">
+          <span class="skill-item">AWS</span>
+          <span class="skill-item">GCP</span>
+          <span class="skill-item">Azure</span>
+          <span class="skill-item">Terraform</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-label">Observability</div>
+        <div class="skill-items">
+          <span class="skill-item">Prometheus</span>
+          <span class="skill-item">Grafana</span>
+          <span class="skill-item">Datadog</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-label">Languages</div>
+        <div class="skill-items">
+          <span class="skill-item">Java</span>
+          <span class="skill-item">Python</span>
+          <span class="skill-item">TypeScript</span>
+          <span class="skill-item">Go</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-label">AI / ML</div>
+        <div class="skill-items">
+          <span class="skill-item">LangChain</span>
+          <span class="skill-item">RAG</span>
+          <span class="skill-item">Bedrock</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-label">Certifications</div>
+        <div class="skill-items">
+          <span class="skill-item">CKAD</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="footer">
+  <div class="terminal">
+    <span class="prompt">nikhil@infra</span> <span class="cmd">kubectl get pods --all-namespaces | wc -l</span><br>
+    <span class="out">1247 pods running across 3 clouds</span><br>
+    <span class="prompt">nikhil@infra</span> <span class="cmd">echo $STATUS</span><br>
+    <span class="out">open to new opportunities</span><br>
+    <span class="prompt">nikhil@infra</span> <span class="cursor"></span>
+  </div>
+</div>
+
+<!-- Default Statcounter code for Nikhil's Portfolio https://nikhilgaddam.com/ -->
+<script type="text/javascript">
+  var sc_project=13209483;
+  var sc_invisible=1;
+  var sc_security="285db3ff";
+</script>
+<script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
+<noscript>
+  <div class="statcounter">
+    <a title="Web Analytics" href="https://statcounter.com/" target="_blank">
+      <img class="statcounter" src="https://c.statcounter.com/13209483/0/285db3ff/1/"
+           alt="Web Analytics" referrerPolicy="no-referrer-when-downgrade" />
+    </a>
+  </div>
+</noscript>
+<!-- End of Statcounter Code -->
+
+<script>
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.section').forEach(s => observer.observe(s));
+</script>
 
 </body>
 </html>
