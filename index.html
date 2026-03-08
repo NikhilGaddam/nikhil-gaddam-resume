@@ -7,6 +7,33 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Outfit:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
+    --bg: #fafafa;
+    --surface: #ffffff;
+    --surface-2: #f4f4f5;
+    --surface-3: #e4e4e7;
+    --border: #e4e4e7;
+    --border-active: #d4d4d8;
+    --text: #18181b;
+    --text-2: #52525b;
+    --text-3: #71717a;
+    --text-4: #a1a1aa;
+    --green: #16a34a;
+    --green-dim: rgba(22,163,74,0.08);
+    --green-glow: rgba(22,163,74,0.12);
+    --blue: #2563eb;
+    --blue-dim: rgba(37,99,235,0.08);
+    --amber: #d97706;
+    --amber-dim: rgba(217,119,6,0.08);
+    --cyan: #0891b2;
+    --cyan-dim: rgba(8,145,178,0.06);
+    --topbar-bg: rgba(250,250,250,0.85);
+    --scanline-color: rgba(0,0,0,0.015);
+    --grid-opacity: 0.08;
+    --mono: 'JetBrains Mono', 'Space Mono', monospace;
+    --sans: 'Outfit', system-ui, sans-serif;
+  }
+
+  [data-theme="dark"] {
     --bg: #09090b;
     --surface: #0f0f12;
     --surface-2: #16161a;
@@ -26,8 +53,9 @@
     --amber-dim: rgba(245,158,11,0.08);
     --cyan: #06b6d4;
     --cyan-dim: rgba(6,182,212,0.06);
-    --mono: 'JetBrains Mono', 'Space Mono', monospace;
-    --sans: 'Outfit', system-ui, sans-serif;
+    --topbar-bg: rgba(9,9,11,0.85);
+    --scanline-color: rgba(0,0,0,0.03);
+    --grid-opacity: 0.15;
   }
 
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -41,24 +69,26 @@
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+    transition: background 0.3s, color 0.3s;
   }
 
   body::after {
     content: '';
     position: fixed;
     inset: 0;
-    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, var(--scanline-color) 2px, var(--scanline-color) 4px);
     pointer-events: none;
     z-index: 9999;
   }
 
-  ::selection { background: var(--green); color: var(--bg); }
+  ::selection { background: var(--green); color: #fff; }
 
+  /* ── Topbar ── */
   .topbar {
     position: fixed;
     top: 0; left: 0; right: 0;
     height: 44px;
-    background: rgba(9,9,11,0.85);
+    background: var(--topbar-bg);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
     display: flex;
@@ -91,7 +121,7 @@
     margin-left: auto;
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 16px;
     color: var(--text-4);
   }
   .topbar-right a {
@@ -101,6 +131,39 @@
   }
   .topbar-right a:hover { color: var(--text-2); }
 
+  /* ── Theme toggle ── */
+  .theme-toggle {
+    position: relative;
+    width: 44px; height: 24px;
+    border-radius: 12px;
+    background: var(--surface-3);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.3s;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+  .theme-toggle:hover { border-color: var(--border-active); }
+  .theme-toggle .toggle-knob {
+    position: absolute;
+    left: 3px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--amber);
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  }
+  .theme-toggle .toggle-knob svg { width: 11px; height: 11px; }
+  [data-theme="dark"] .theme-toggle .toggle-knob {
+    left: 21px;
+    background: #334155;
+  }
+
+  /* ── Hero ── */
   .hero {
     min-height: 100vh;
     display: flex;
@@ -119,7 +182,7 @@
       linear-gradient(var(--border) 1px, transparent 1px),
       linear-gradient(90deg, var(--border) 1px, transparent 1px);
     background-size: 60px 60px;
-    opacity: 0.15;
+    opacity: var(--grid-opacity);
     mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 70%);
   }
 
@@ -178,9 +241,10 @@
 
   @keyframes slide-in {
     from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
+  /* ── Main ── */
   .main {
     max-width: 960px;
     margin: 0 auto;
@@ -227,7 +291,7 @@
     letter-spacing: 0.5px;
   }
 
-  /* Experience */
+  /* ── Experience ── */
   .exp {
     position: relative;
     margin-bottom: 20px;
@@ -237,10 +301,9 @@
     overflow: hidden;
     transition: border-color 0.3s, box-shadow 0.3s;
   }
-  .exp:hover {
-    border-color: var(--border-active);
-    box-shadow: 0 4px 30px rgba(0,0,0,0.4);
-  }
+  .exp:hover { border-color: var(--border-active); }
+  :root .exp:hover       { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+  [data-theme="dark"] .exp:hover { box-shadow: 0 4px 30px rgba(0,0,0,0.4); }
 
   .exp-top {
     padding: 24px 28px 0;
@@ -271,8 +334,7 @@
   }
 
   .exp-company { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--green); }
-
-  .exp-loc { font-family: var(--mono); font-size: 11px; color: var(--text-4); }
+  .exp-loc     { font-family: var(--mono); font-size: 11px; color: var(--text-4); }
   .exp-loc::before { content: '\00b7'; margin-right: 8px; color: var(--text-4); }
 
   .exp-body { padding: 16px 28px 24px; }
@@ -311,7 +373,7 @@
     font-size: 13px;
   }
 
-  /* Education */
+  /* ── Education ── */
   .edu-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
   .edu {
@@ -327,7 +389,7 @@
   .edu-school { font-size: 13px; font-weight: 300; color: var(--text-2); margin-top: 4px; }
   .edu-date   { font-family: var(--mono); font-size: 11px; color: var(--text-4); margin-top: 10px; }
 
-  /* Projects */
+  /* ── Projects ── */
   .proj {
     padding: 24px;
     border: 1px solid var(--border);
@@ -357,20 +419,20 @@
   .proj-gh:hover { border-color: var(--green); color: var(--green); background: var(--green-dim); }
   .proj-gh svg { width: 16px; height: 16px; fill: currentColor; }
 
-  .proj-tags { display: flex; gap: 6px; }
+  .proj-tags { display: flex; gap: 6px; flex-wrap: wrap; }
   .proj-tag {
     font-family: var(--mono);
     font-size: 10px;
     color: var(--cyan);
     padding: 3px 8px;
-    border: 1px solid rgba(6,182,212,0.2);
+    border: 1px solid rgba(8,145,178,0.2);
     border-radius: 4px;
     background: var(--cyan-dim);
   }
 
   .proj-desc { font-size: 14px; font-weight: 300; color: var(--text-2); line-height: 1.7; }
 
-  /* Research */
+  /* ── Research ── */
   .research {
     padding: 24px;
     border: 1px solid var(--border);
@@ -380,7 +442,7 @@
   .research-title { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: 8px; }
   .research-meta  { font-family: var(--mono); font-size: 11px; color: var(--text-4); display: flex; gap: 16px; flex-wrap: wrap; }
 
-  /* Skills */
+  /* ── Skills ── */
   .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
 
   .skill-group {
@@ -410,12 +472,13 @@
   }
   .skill-item:hover { border-color: var(--green); color: var(--green); background: var(--green-dim); }
 
-  /* Footer terminal */
+  /* ── Footer ── */
   .footer {
     max-width: 960px;
     margin: 0 auto;
     padding: 0 60px 60px;
   }
+
   .terminal {
     font-family: var(--mono);
     font-size: 12px;
@@ -439,16 +502,7 @@
   }
   @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
 
-  /* Buttons */
-  .blog-link {
-    color: var(--green) !important;
-    border: 1px solid rgba(34,197,94,0.25);
-    padding: 4px 12px;
-    border-radius: 4px;
-    transition: all 0.25s !important;
-  }
-  .blog-link:hover { background: var(--green-dim); border-color: var(--green) !important; }
-
+  /* ── Buttons ── */
   .dl-btn {
     font-family: var(--mono);
     font-size: 11px;
@@ -456,7 +510,7 @@
     letter-spacing: 1px;
     text-transform: uppercase;
     text-decoration: none;
-    color: var(--bg);
+    color: #fff;
     background: var(--green);
     padding: 6px 16px;
     border-radius: 6px;
@@ -465,10 +519,11 @@
     gap: 8px;
     transition: all 0.25s;
     box-shadow: 0 0 12px var(--green-glow);
+    white-space: nowrap;
   }
   .dl-btn:hover {
-    background: #16a34a;
-    box-shadow: 0 0 20px rgba(34,197,94,0.25);
+    opacity: 0.88;
+    box-shadow: 0 0 20px var(--green-glow);
     transform: translateY(-1px);
   }
   .dl-btn svg {
@@ -480,9 +535,7 @@
     stroke-linejoin: round;
   }
 
-  /* GitHub icon SVG (shared) */
-  .gh-icon { width: 16px; height: 16px; fill: currentColor; }
-
+  /* ── Responsive ── */
   @media (max-width: 700px) {
     .hero   { padding: 100px 24px 60px; }
     .main   { padding: 0 24px 80px; }
@@ -509,6 +562,20 @@
     <a href="#projects">proj</a>
     <a href="#skills">skills</a>
     <span style="color:var(--text-4);font-size:12px;">ngaddam.dev@gmail.com</span>
+    <div class="theme-toggle" id="themeToggle" title="Toggle theme">
+      <div class="toggle-knob">
+        <svg id="sunIcon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg id="moonIcon" viewBox="0 0 24 24" fill="none" stroke="#e2e8f0" stroke-width="2" stroke-linecap="round" style="display:none">
+          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+        </svg>
+      </div>
+    </div>
     <a href="nikhil_gaddam.pdf" download class="dl-btn">
       <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       Resume
@@ -617,7 +684,7 @@
         <div class="proj-name-wrap">
           <span class="proj-name">OpenClaw</span>
           <a href="https://github.com/openclaw/openclaw" target="_blank" rel="noopener" class="proj-gh" title="GitHub">
-            <svg class="gh-icon" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
           </a>
         </div>
         <div class="proj-tags"><span class="proj-tag">Python</span></div>
@@ -630,7 +697,7 @@
         <div class="proj-name-wrap">
           <span class="proj-name">Agent Gateway</span>
           <a href="https://github.com/agentgateway/agentgateway" target="_blank" rel="noopener" class="proj-gh" title="GitHub">
-            <svg class="gh-icon" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
           </a>
         </div>
         <div class="proj-tags"><span class="proj-tag">Rust</span></div>
@@ -643,7 +710,7 @@
         <div class="proj-name-wrap">
           <span class="proj-name">Archon</span>
           <a href="https://github.com/coleam00/Archon" target="_blank" rel="noopener" class="proj-gh" title="GitHub">
-            <svg class="gh-icon" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
           </a>
         </div>
         <div class="proj-tags"><span class="proj-tag">Python</span></div>
@@ -656,7 +723,7 @@
         <div class="proj-name-wrap">
           <span class="proj-name">Agent Browser</span>
           <a href="https://github.com/vercel-labs/agent-browser" target="_blank" rel="noopener" class="proj-gh" title="GitHub">
-            <svg class="gh-icon" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
           </a>
         </div>
         <div class="proj-tags"><span class="proj-tag">TypeScript</span><span class="proj-tag">Python</span></div>
@@ -727,8 +794,19 @@
         <div class="skill-group-label">AI / ML</div>
         <div class="skill-items">
           <span class="skill-item">LangChain</span>
+          <span class="skill-item">LangGraph</span>
           <span class="skill-item">RAG</span>
+          <span class="skill-item">MCP</span>
+          <span class="skill-item">A2A</span>
           <span class="skill-item">Bedrock</span>
+          <span class="skill-item">OpenAI</span>
+          <span class="skill-item">Claude API</span>
+          <span class="skill-item">Ollama</span>
+          <span class="skill-item">CrewAI</span>
+          <span class="skill-item">AutoGen</span>
+          <span class="skill-item">Pinecone</span>
+          <span class="skill-item">Weaviate</span>
+          <span class="skill-item">HuggingFace</span>
         </div>
       </div>
       <div class="skill-group">
@@ -770,6 +848,32 @@
 <!-- End of Statcounter Code -->
 
 <script>
+  // Theme toggle — default light
+  const toggle   = document.getElementById('themeToggle');
+  const sunIcon  = document.getElementById('sunIcon');
+  const moonIcon = document.getElementById('moonIcon');
+
+  function setTheme(theme) {
+    if (theme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      sunIcon.style.display  = 'none';
+      moonIcon.style.display = 'block';
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      sunIcon.style.display  = 'block';
+      moonIcon.style.display = 'none';
+    }
+    localStorage.setItem('theme', theme);
+  }
+
+  // Restore saved preference, default to light
+  setTheme(localStorage.getItem('theme') || 'light');
+
+  toggle.addEventListener('click', () => {
+    setTheme(document.documentElement.hasAttribute('data-theme') ? 'light' : 'dark');
+  });
+
+  // Section fade-in on scroll
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
