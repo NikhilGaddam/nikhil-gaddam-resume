@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nikhil Gaddam</title>
-<!-- Inline SVG favicon — terminal-style "N" with green accent -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2309090b'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-weight='700' font-size='18' fill='%2322c55e'%3EN%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Outfit:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -91,23 +90,28 @@
   .topbar {
     position: fixed;
     top: 0; left: 0; right: 0;
-    height: 44px;
+    height: 48px;
     background: var(--topbar-bg);
     backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
-    padding: 0 24px;
+    padding: 0 16px;
     z-index: 1000;
     font-family: var(--mono);
     font-size: 12px;
+    gap: 0;
   }
 
   .topbar-left {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
     color: var(--text-3);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
   }
 
   .topbar-dot {
@@ -116,32 +120,58 @@
     background: var(--green);
     box-shadow: 0 0 8px var(--green-glow);
     animation: pulse-dot 3s ease infinite;
+    flex-shrink: 0;
   }
   @keyframes pulse-dot { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
 
-  .topbar-status { color: var(--green); font-weight: 500; }
+  .topbar-status {
+    color: var(--green);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Hide separator + username on small screens */
+  .topbar-sep,
+  .topbar-username {
+    color: var(--text-4);
+    white-space: nowrap;
+  }
 
   .topbar-right {
-    margin-left: auto;
     display: flex;
     align-items: center;
-    gap: 16px;
-    color: var(--text-4);
+    gap: 10px;
+    flex-shrink: 0;
   }
-  .topbar-right a {
+
+  /* nav links — hidden on mobile */
+  .topbar-nav {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .topbar-nav a {
     color: var(--text-4);
     text-decoration: none;
     transition: color 0.2s;
+    font-size: 12px;
   }
-  .topbar-right a:hover { color: var(--text-2); }
-  .topbar-right a.dl-btn { color: #fff; }
-  .topbar-right a.dl-btn:hover { color: #fff; }
+  .topbar-nav a:hover { color: var(--text-2); }
+
+  /* email — hidden on mobile */
+  .topbar-email {
+    color: var(--text-4);
+    font-size: 12px;
+    white-space: nowrap;
+  }
 
   /* ── Theme toggle ── */
   .theme-toggle {
     position: relative;
-    width: 44px; height: 24px;
-    border-radius: 12px;
+    width: 40px; height: 22px;
+    border-radius: 11px;
     background: var(--surface-3);
     border: 1px solid var(--border);
     cursor: pointer;
@@ -153,7 +183,7 @@
   .theme-toggle:hover { border-color: var(--border-active); }
   .theme-toggle .toggle-knob {
     position: absolute;
-    left: 3px;
+    left: 2px;
     width: 18px; height: 18px;
     border-radius: 50%;
     background: var(--amber);
@@ -165,9 +195,52 @@
   }
   .theme-toggle .toggle-knob svg { width: 11px; height: 11px; }
   [data-theme="dark"] .theme-toggle .toggle-knob {
-    left: 21px;
+    left: 18px;
     background: #334155;
   }
+
+  /* ── Resume button ── */
+  .dl-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #fff !important;
+    background: var(--green);
+    padding: 6px 12px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.25s;
+    box-shadow: 0 0 12px var(--green-glow);
+    white-space: nowrap;
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .dl-btn:hover {
+    opacity: 0.88;
+    box-shadow: 0 0 20px var(--green-glow);
+    transform: translateY(-1px);
+  }
+  .dl-btn:active {
+    transform: translateY(0);
+    opacity: 0.95;
+  }
+  .dl-btn svg {
+    width: 13px; height: 13px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+  }
+  /* Hide the "Resume" text on very small screens, keep icon */
+  .dl-btn-text { display: inline; }
 
   /* ── Hero ── */
   .hero {
@@ -508,39 +581,6 @@
   }
   @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
 
-  /* ── Resume download button ── */
-  .dl-btn {
-    font-family: var(--mono);
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: var(--dl-btn-color);
-    background: var(--green);
-    padding: 6px 16px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.25s;
-    box-shadow: 0 0 12px var(--green-glow);
-    white-space: nowrap;
-  }
-  .dl-btn:hover {
-    opacity: 0.88;
-    box-shadow: 0 0 20px var(--green-glow);
-    transform: translateY(-1px);
-  }
-  .dl-btn svg {
-    width: 14px; height: 14px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
   /* ── Responsive ── */
   @media (max-width: 700px) {
     .hero   { padding: 100px 24px 60px; }
@@ -548,9 +588,25 @@
     .footer { padding: 0 24px 40px; }
     .edu-row { grid-template-columns: 1fr; }
     .skills-grid { grid-template-columns: 1fr 1fr; }
-    .topbar-right a:not(.dl-btn), .topbar-right > span { display: none; }
-    .topbar-left span { display: none; }
     .hero-name { letter-spacing: -2px; }
+
+    /* Topbar mobile: hide nav links and email */
+    .topbar-nav,
+    .topbar-email,
+    .topbar-sep,
+    .topbar-username { display: none; }
+
+    /* Keep topbar height consistent */
+    .topbar { padding: 0 14px; height: 48px; }
+
+    /* Make status text shorter on tiny screens */
+    .topbar-status { font-size: 11px; }
+  }
+
+  /* Extra small: icon-only button */
+  @media (max-width: 380px) {
+    .dl-btn-text { display: none; }
+    .dl-btn { padding: 7px 10px; }
   }
 </style>
 </head>
@@ -560,15 +616,17 @@
   <div class="topbar-left">
     <div class="topbar-dot"></div>
     <span class="topbar-status">systems operational</span>
-    <span style="color:var(--text-4)">|</span>
-    <span>nikhil_gaddam</span>
+    <span class="topbar-sep" style="color:var(--text-4)">|</span>
+    <span class="topbar-username">nikhil_gaddam</span>
   </div>
   <div class="topbar-right">
-    <a href="#experience">exp</a>
-    <a href="#education">edu</a>
-    <a href="#projects">proj</a>
-    <a href="#skills">skills</a>
-    <span style="color:var(--text-4);font-size:12px;">ngaddam.dev@gmail.com</span>
+    <nav class="topbar-nav">
+      <a href="#experience">exp</a>
+      <a href="#education">edu</a>
+      <a href="#projects">proj</a>
+      <a href="#skills">skills</a>
+    </nav>
+    <span class="topbar-email">ngaddam.dev@gmail.com</span>
     <div class="theme-toggle" id="themeToggle" title="Toggle theme">
       <div class="toggle-knob">
         <svg id="sunIcon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
@@ -585,7 +643,7 @@
     </div>
     <a href="nikhil_gaddam.pdf" download class="dl-btn">
       <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Resume
+      <span class="dl-btn-text">Resume</span>
     </a>
   </div>
 </div>
